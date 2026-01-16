@@ -433,9 +433,16 @@ const Game = {
                     this.resolveMinigame(gameId, 'partial');
                 }
                 break;
+            case 'documentation':
+                if (typeof DocumentGame !== 'undefined') {
+                    DocumentGame.init(container, difficulty, this.state.character);
+                } else {
+                    console.error('DocumentGame not loaded');
+                    this.resolveMinigame(gameId, 'partial');
+                }
+                break;
             // Future minigames will be added here
             case 'whistle':
-            case 'documentation':
             case 'ballot':
             case 'boss':
                 console.log('Minigame not yet implemented:', gameId);

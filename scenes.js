@@ -1067,12 +1067,108 @@ const Scenes = {
                <p>The legal observers brief you quickly.</p>
                <p class="dialogue"><span class="speaker">Legal Observer:</span> Stay back. Stay safe. Stay filming. If you get arrested, this footage needs to survive.</p>
                <p>They show you how to stream directly to a server, so the footage can't be deleted.</p>
-               <p class="text-dim">To be continued in Phase 2 content...</p>`,
-        alert: 'Act 2 content coming in Phase 2 development.',
+               <p>The march continues. Then you hear screaming from a side street.</p>`,
+        effects: { press: 5 },
         choices: [
             {
-                text: 'Continue march (placeholder)',
-                next: 'scene6_committed'
+                text: 'Investigate the screaming',
+                effects: { legitimacy: 5 },
+                next: 'scene12_brutality'
+            },
+            {
+                text: 'Stay with the main march',
+                next: 'scene7_frontline'
+            }
+        ]
+    },
+
+    scene12_brutality: {
+        day: 4,
+        location: 'Side Street - Incident',
+        art: `
+    ╔════════════════════════════════════════╗
+    ║  !!! BRUTALITY IN PROGRESS !!!         ║
+    ╠════════════════════════════════════════╣
+    ║                                        ║
+    ║     👮  👮  👮                          ║
+    ║      \\  |  /                           ║
+    ║       \\ | /   ← OFFICERS              ║
+    ║        \\|/                             ║
+    ║     ☻  ☻  ☻   ← VICTIMS ON GROUND     ║
+    ║                                        ║
+    ║     📱 ← YOUR PHONE (document this)    ║
+    ║                                        ║
+    ╚════════════════════════════════════════╝`,
+        text: `<p>You turn the corner and freeze.</p>
+               <p>Three officers. Three people on the ground. Batons rising and falling.</p>
+               <p>One officer has his knee on someone's neck. Another is zip-tying an unconscious woman. The third is kicking a man who's already curled into a ball.</p>
+               <p>No one else is filming. The main march moved on. It's just you.</p>
+               <p class="dialogue"><span class="speaker">Your hands are shaking:</span> Document this. Get the badges. Get the faces. Get the evidence.</p>
+               <p class="text-red">But they're moving. And if they see you...</p>`,
+        effects: { fascism: 10, democracy: -5 },
+        alert: 'Get evidence before they spot you. This is what you came for.',
+        minigame: 'documentation',
+        choices: [
+            {
+                text: 'Start filming [DOCUMENTATION MINI-GAME]',
+                next: 'scene13_after_doc'
+            }
+        ]
+    },
+
+    scene13_after_doc: {
+        day: 4,
+        location: 'Side Street - After',
+        text: `<p>Your hands won't stop shaking.</p>
+               <p>The officers eventually moved on. Dragged their victims into a van. Drove away.</p>
+               <p>You have footage. How much, how clear — that depends on what you captured.</p>
+               <p>A legal observer finds you standing there, phone still raised.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> Did you get it? Tell me you got it.</p>`,
+        effects: { legitimacy: 5 },
+        choices: [
+            {
+                text: 'Show them the footage',
+                next: 'scene13_show_footage'
+            },
+            {
+                text: 'Nod silently, still in shock',
+                next: 'scene13_shock'
+            }
+        ]
+    },
+
+    scene13_show_footage: {
+        day: 4,
+        location: 'Side Street - After',
+        text: `<p>The legal observer watches your footage. Their expression shifts.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> Badge numbers. Faces. The strikes. This is exactly what we needed.</p>
+               <p>They help you upload it to the secure server.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> Even if they take your phone now, the evidence is safe.</p>
+               <p>They put a hand on your shoulder.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> What you just did? That might put those officers behind bars. That might save someone's life in the trial.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> You did good. Now let's get you back to the medic tent.</p>`,
+        effects: { press: 20, legitimacy: 15 },
+        choices: [
+            {
+                text: 'Go with them',
+                next: 'scene10_aftermath'
+            }
+        ]
+    },
+
+    scene13_shock: {
+        day: 4,
+        location: 'Side Street - After',
+        text: `<p>You can't speak. You just nod.</p>
+               <p>The legal observer gently takes your phone, checks the footage, backs it up.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> It's okay. First time seeing it up close is always... yeah.</p>
+               <p>They guide you toward the medic tent.</p>
+               <p class="dialogue"><span class="speaker">Legal Observer:</span> You did what you could. That's all any of us can do.</p>`,
+        effects: { press: 10, legitimacy: 10 },
+        choices: [
+            {
+                text: 'Let them lead you away',
+                next: 'scene10_aftermath'
             }
         ]
     },
