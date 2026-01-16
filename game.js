@@ -441,8 +441,17 @@ const Game = {
                     this.resolveMinigame(gameId, 'partial');
                 }
                 break;
-            // Future minigames will be added here
             case 'whistle':
+                // Immigrant class has advantage in whistle network
+                if (this.state.character === 'immigrant') difficulty = 'easy';
+                if (typeof WhistleGame !== 'undefined') {
+                    WhistleGame.init(container, difficulty, this.state.character);
+                } else {
+                    console.error('WhistleGame not loaded');
+                    this.resolveMinigame(gameId, 'partial');
+                }
+                break;
+            // Future minigames will be added here
             case 'ballot':
             case 'boss':
                 console.log('Minigame not yet implemented:', gameId);

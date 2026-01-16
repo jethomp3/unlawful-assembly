@@ -1173,6 +1173,184 @@ const Scenes = {
         ]
     },
 
+    // ===== WHISTLE NETWORK SCENES =====
+
+    scene14_raid_intel: {
+        day: 7,
+        location: 'Community Center',
+        art: `
+    ╔════════════════════════════════════════╗
+    ║  !!! URGENT INTEL !!!                  ║
+    ╠════════════════════════════════════════╣
+    ║                                        ║
+    ║     📱 INCOMING MESSAGE               ║
+    ║                                        ║
+    ║     "ICE staging on Maple St"          ║
+    ║     "Moving in 5 minutes"              ║
+    ║     "8 houses on the list"             ║
+    ║                                        ║
+    ║     🚐 ← THEY'RE COMING               ║
+    ║                                        ║
+    ╚════════════════════════════════════════╝`,
+        text: `<p>Your phone buzzes. Then Maria's. Then everyone's at once.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> It's happening. Raid on Oak Street. They've got a list.</p>
+               <p>She's already moving, grabbing her jacket.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> The whistle network. It's our only chance to warn them in time.</p>
+               <p>The whistle network — a system of coded signals passed from house to house. If one house hears the pattern, they repeat it to the next. Faster than running. Quieter than phones.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> But you have to get the pattern right. One mistake and the chain breaks.</p>`,
+        effects: { fascism: 5 },
+        alert: 'ICE raid imminent. Warn the network.',
+        choices: [
+            {
+                text: 'Head to Oak Street',
+                effects: { legitimacy: 10 },
+                next: 'scene15_whistle_start'
+            },
+            {
+                text: 'Call the police instead (report the raid)',
+                effects: { fascism: 10, legitimacy: -10 },
+                next: 'scene15_call_police'
+            }
+        ]
+    },
+
+    scene15_whistle_start: {
+        day: 7,
+        location: 'Oak Street - Starting Position',
+        art: `
+    ╔════════════════════════════════════════╗
+    ║  THE WHISTLE NETWORK                   ║
+    ╠════════════════════════════════════════╣
+    ║                                        ║
+    ║     🏠  🏠  🏠  🏠                      ║
+    ║      ↑   ↑   ↑   ↑                     ║
+    ║     ♪───────────────→                  ║
+    ║      Pattern spreads house to house    ║
+    ║                                        ║
+    ║     🏠  🏠  🏠  🏠                      ║
+    ║                                        ║
+    ║     🚐💨  ← ICE coming                 ║
+    ║                                        ║
+    ╚════════════════════════════════════════╝`,
+        text: `<p>You reach the corner of Oak Street. Eight houses. Eight families.</p>
+               <p>In the distance, you can hear engines. They're coming.</p>
+               <p>Maria hands you a whistle.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> Short whistle is a tap. Long whistle is a hold. Listen to the pattern, then repeat it exactly. Each house passes it to the next.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> Get it wrong, and the chain breaks. The house doesn't know what to do. They don't pass it on.</p>
+               <p>She squeezes your shoulder.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> You've got this. Their lives depend on it.</p>`,
+        effects: { democracy: 5 },
+        minigame: 'whistle',
+        choices: [
+            {
+                text: 'Start the warning signal [WHISTLE NETWORK MINI-GAME]',
+                next: 'scene16_after_whistle'
+            }
+        ]
+    },
+
+    scene15_call_police: {
+        day: 7,
+        location: 'Community Center',
+        text: `<p>You call 911. Report the ICE raid.</p>
+               <p>The dispatcher sounds confused.</p>
+               <p class="dialogue"><span class="speaker">Dispatcher:</span> Sir/Ma'am, ICE operations are federal. We don't interfere with federal operations.</p>
+               <p>Click.</p>
+               <p>By the time you look up, Maria is gone. The others are gone. And you can hear the vans arriving on Oak Street.</p>
+               <p class="text-red">You hear the doors breaking. The screaming.</p>
+               <p>You did nothing useful. The system protected itself.</p>`,
+        effects: { fascism: 15, democracy: -10, legitimacy: -15 },
+        choices: [
+            {
+                text: 'Rush to Oak Street (too late)',
+                next: 'scene16_too_late'
+            }
+        ]
+    },
+
+    scene16_after_whistle: {
+        day: 7,
+        location: 'Oak Street - After',
+        text: `<p>The vans arrive. Doors slam. Boots on pavement.</p>
+               <p>But the houses they raid are empty. Or mostly empty.</p>
+               <p>The network worked. At least some of it.</p>
+               <p>Maria finds you afterward, breathing hard.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> We did it. Most of them got out.</p>
+               <p>She looks down the street at the flashing lights.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> Not all of them. But most.</p>`,
+        effects: { democracy: 10, legitimacy: 10 },
+        choices: [
+            {
+                text: 'Ask who didn\'t make it',
+                next: 'scene16_who_taken'
+            },
+            {
+                text: 'Help the families who escaped',
+                next: 'scene16_help_escaped'
+            }
+        ]
+    },
+
+    scene16_too_late: {
+        day: 7,
+        location: 'Oak Street',
+        text: `<p>You arrive to chaos.</p>
+               <p>ICE vans. Flashing lights. People being dragged from houses.</p>
+               <p>A child screams for her mother. An officer tells her to be quiet.</p>
+               <p>Maria is there, filming, tears streaming down her face.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> Where were you? Where the fuck were you?</p>
+               <p>You have no answer.</p>`,
+        effects: { fascism: 20, democracy: -15, legitimacy: -20 },
+        addMemorial: 'The families of Oak Street',
+        choices: [
+            {
+                text: 'Help document what\'s happening',
+                next: 'scene10_aftermath'
+            }
+        ]
+    },
+
+    scene16_who_taken: {
+        day: 7,
+        location: 'Oak Street - After',
+        text: `<p>Maria checks her phone. The network reporting in.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> The Garcias made it. The Nguyens too. The Patels...</p>
+               <p>She pauses.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> The Hernandezes didn't get the signal in time. Their door was already down before they could move.</p>
+               <p>She shows you a photo on her phone. A family of four. Two parents, two kids.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> They're in processing now. We're already working on lawyers, bail.</p>
+               <p class="text-dim">But you know. You know that's not enough.</p>`,
+        effects: { democracy: -5 },
+        addMemorial: 'The Hernandezes',
+        choices: [
+            {
+                text: 'Commit to doing better next time',
+                effects: { legitimacy: 10 },
+                next: 'scene10_aftermath'
+            }
+        ]
+    },
+
+    scene16_help_escaped: {
+        day: 7,
+        location: 'Safe House',
+        text: `<p>The church basement becomes a temporary shelter.</p>
+               <p>Blankets. Water. Phones charging. Children who don't understand why they can't go home.</p>
+               <p>You help where you can. Making calls. Handing out supplies. Keeping kids distracted.</p>
+               <p>An elderly woman grabs your hand.</p>
+               <p class="dialogue"><span class="speaker">Mrs. Nguyen:</span> You were the one? With the whistle?</p>
+               <p>You nod.</p>
+               <p class="dialogue"><span class="speaker">Mrs. Nguyen:</span> My grandchildren are safe because of you. I will never forget.</p>`,
+        effects: { democracy: 10, legitimacy: 15 },
+        addAlly: 'Mrs. Nguyen',
+        choices: [
+            {
+                text: 'Stay and help through the night',
+                next: 'scene10_aftermath'
+            }
+        ]
+    },
+
     scene7_coordinator: {
         day: 4,
         location: 'Downtown - March in Progress',
