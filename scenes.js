@@ -826,15 +826,219 @@ const Scenes = {
     scene7_frontline: {
         day: 4,
         location: 'Downtown - March in Progress',
+        art: `
+    ╔════════════════════════════════════════╗
+    ║  THE MARCH - FRONT LINE                ║
+    ╠════════════════════════════════════════╣
+    ║                                        ║
+    ║       ████████████████████████         ║
+    ║       █  POLICE LINE AHEAD  █          ║
+    ║       ████████████████████████         ║
+    ║                │                       ║
+    ║                │  500 ft               ║
+    ║                ↓                       ║
+    ║    ☻☻☻☻☻☻☻☻☻☻☻☻☻☻☻☻☻☻☻☻               ║
+    ║    ════════════════════════            ║
+    ║         MAIN STREET                    ║
+    ╚════════════════════════════════════════╝`,
         text: `<p>The front line is where the energy is. And the danger.</p>
                <p>You link arms with strangers who become allies. The chants are louder here.</p>
-               <p>Ahead, you can see the police line forming.</p>
-               <p class="text-dim">To be continued in Phase 2 content...</p>`,
-        alert: 'Act 2 content coming in Phase 2 development.',
+               <p class="dialogue">"WHOSE STREETS? OUR STREETS!"</p>
+               <p>Ahead, you can see the police line forming. Riot gear. Shields. Batons.</p>
+               <p>The march slows. Tension crackles in the air.</p>
+               <p>Then someone shouts from the back: "THEY'RE FLANKING US!"</p>`,
+        effects: { democracy: 5, fascism: 5 },
+        alert: 'Police forming perimeter. Kettle tactic detected.',
         choices: [
             {
-                text: 'Continue march (placeholder)',
+                text: 'Try to find an escape route',
+                effects: { legitimacy: 5 },
+                next: 'scene8_kettle'
+            },
+            {
+                text: 'Hold the line',
+                effects: { democracy: 10, fascism: 10 },
+                next: 'scene8_hold'
+            },
+            {
+                text: 'Rally the group to move together',
+                effects: { legitimacy: 10 },
+                next: 'scene8_kettle'
+            }
+        ]
+    },
+
+    scene8_kettle: {
+        day: 4,
+        location: 'Downtown - Police Encirclement',
+        art: `
+    ╔════════════════════════════════════════╗
+    ║  !!! KETTLE ALERT !!!                  ║
+    ╠════════════════════════════════════════╣
+    ║                                        ║
+    ║    ████████████████████████████████    ║
+    ║    █                              █    ║
+    ║    █     ☻☻☻☻                     █    ║
+    ║    █     ☻☻☻☻    ← TRAPPED       █    ║
+    ║    █     ☻YOU☻                    █    ║
+    ║    █                              █    ║
+    ║    █████████████████████████ ░░░ █    ║
+    ║                              EXIT     ║
+    ╚════════════════════════════════════════╝`,
+        text: `<p>It's happening. The police are closing in from all sides.</p>
+               <p>A <span class="text-red">kettle</span>. The tactic they use to trap and mass-arrest protesters.</p>
+               <p>Around you, people are starting to panic. Some are already running. Others are frozen.</p>
+               <p class="dialogue"><span class="speaker">Someone nearby:</span> There's a gap! Over by the alley! But it won't last long!</p>
+               <p>You have seconds to decide. Do you try to lead people out?</p>`,
+        effects: { fascism: 10 },
+        alert: 'The walls are closing in. Move fast.',
+        minigame: 'kettle',
+        choices: [
+            {
+                text: 'Lead the escape [KETTLE MINI-GAME]',
+                next: 'scene9_after_kettle'
+            }
+        ]
+    },
+
+    scene8_hold: {
+        day: 4,
+        location: 'Downtown - Police Line',
+        text: `<p>You hold your ground. Others follow your lead.</p>
+               <p>The police advance. Shields up. Batons ready.</p>
+               <p class="dialogue"><span class="speaker">Officer (megaphone):</span> This is an unlawful assembly. Disperse immediately or you will be arrested.</p>
+               <p>No one moves. The chanting continues, defiant.</p>
+               <p>Then the tear gas canisters arc overhead...</p>`,
+        effects: { democracy: 10, fascism: 15, legitimacy: -5 },
+        choices: [
+            {
+                text: 'Try to escape now',
+                next: 'scene8_kettle'
+            },
+            {
+                text: 'Accept arrest peacefully',
+                effects: { legitimacy: 10, bail: -500 },
+                next: 'scene9_arrest'
+            }
+        ]
+    },
+
+    scene9_after_kettle: {
+        day: 4,
+        location: 'Side Street - After Escape',
+        text: `<p>You made it out. Some of you, at least.</p>
+               <p>The street is quiet here, away from the chaos. You can still hear the shouts and sirens in the distance.</p>
+               <p>The people who escaped with you are shaken but alive. Some are crying. Some are laughing with relief.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> That was too close. Way too close.</p>
+               <p>She looks back toward the march.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> We need to regroup. Figure out who got arrested. Start the bail fund calls.</p>`,
+        effects: { legitimacy: 5 },
+        choices: [
+            {
+                text: 'Help coordinate the response',
+                effects: { legitimacy: 10 },
+                next: 'scene10_aftermath'
+            },
+            {
+                text: 'Go home. Process what happened.',
+                effects: { democracy: -5 },
+                next: 'scene10_home'
+            }
+        ]
+    },
+
+    scene9_arrest: {
+        day: 4,
+        location: 'Police Van',
+        text: `<p>The zip ties are tight around your wrists.</p>
+               <p>You're loaded into a van with a dozen others. Some you recognize from the march. Some are strangers.</p>
+               <p>No one talks. Everyone is thinking the same thing: what happens now?</p>
+               <p class="text-dim">The van doors slam shut. Darkness.</p>`,
+        effects: { bail: -500, fascism: 10 },
+        choices: [
+            {
+                text: 'Stay calm. Wait for processing.',
+                next: 'scene10_jail'
+            }
+        ]
+    },
+
+    scene10_aftermath: {
+        day: 5,
+        location: 'Community Center',
+        text: `<p>The next morning. You've been up all night.</p>
+               <p>The whiteboard is covered with names. Arrested. Released. Missing. Unknown.</p>
+               <p>Bail calls went out. Lawyers are at the courthouse. The network is doing what it does.</p>
+               <p class="dialogue"><span class="speaker">Pastor Williams:</span> We got 34 out before midnight. 12 more this morning. Still working on the rest.</p>
+               <p>She looks exhausted but determined.</p>
+               <p class="dialogue"><span class="speaker">Pastor Williams:</span> This isn't the end. It's just the beginning.</p>`,
+        effects: { democracy: 10, legitimacy: 15 },
+        choices: [
+            {
+                text: 'Continue helping',
                 next: 'scene6_committed'
+            }
+        ]
+    },
+
+    scene10_home: {
+        day: 5,
+        location: 'Your Apartment',
+        text: `<p>You made it home. Locked the door. Sat in the dark.</p>
+               <p>Your hands are still shaking. You can still smell the tear gas in your clothes.</p>
+               <p>The TV shows aerial footage of the march. "Violence erupts at downtown protest."</p>
+               <p>They're not showing the peaceful hours. Just the chaos at the end.</p>
+               <p>Maria texts: "You okay? We're regrouping tomorrow."</p>`,
+        effects: { democracy: -5 },
+        choices: [
+            {
+                text: 'Text back: "I\'ll be there."',
+                next: 'scene10_aftermath'
+            },
+            {
+                text: 'Don\'t respond',
+                effects: { fascism: 5 },
+                next: 'scene5_delay_again'
+            }
+        ]
+    },
+
+    scene10_jail: {
+        day: 5,
+        location: 'County Jail - Holding Cell',
+        text: `<p>Processing took hours. Fingerprints. Photos. Forms.</p>
+               <p>Now you wait in a holding cell with others from the march.</p>
+               <p>Someone starts humming "We Shall Overcome." Others join in.</p>
+               <p>A guard bangs on the bars. "Quiet in there!"</p>
+               <p>The humming gets louder.</p>`,
+        effects: { legitimacy: 10, democracy: 5 },
+        choices: [
+            {
+                text: 'Join the singing',
+                effects: { legitimacy: 5 },
+                next: 'scene11_release'
+            },
+            {
+                text: 'Stay quiet, wait for release',
+                next: 'scene11_release'
+            }
+        ]
+    },
+
+    scene11_release: {
+        day: 6,
+        location: 'County Jail - Release',
+        text: `<p>Morning. Your name is called.</p>
+               <p>Someone posted bail. You don't know who yet.</p>
+               <p>Outside, Maria is waiting with coffee and a change of clothes.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> Welcome back to the fight.</p>
+               <p>She smiles, but her eyes are tired.</p>
+               <p class="dialogue"><span class="speaker">Maria:</span> The movement doesn't stop. Neither do we.</p>`,
+        effects: { legitimacy: 10 },
+        choices: [
+            {
+                text: 'Thank her. Ask what\'s next.',
+                next: 'scene10_aftermath'
             }
         ]
     },

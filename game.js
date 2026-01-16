@@ -415,8 +415,36 @@ const Game = {
         }
 
         this.showScreen('minigame-screen');
-        // Load minigame module (to be implemented in Phase 3)
-        console.log('Minigame triggered:', gameId);
+        const container = document.getElementById('minigame-container');
+
+        // Determine difficulty based on character and game state
+        let difficulty = 'normal';
+        if (this.state.character === 'engineer') difficulty = 'easy';
+        if (this.state.character === 'immigrant') difficulty = 'immigrant';
+        if (this.state.character === 'veteran' && gameId === 'kettle') difficulty = 'easy';
+
+        // Load the appropriate minigame
+        switch (gameId) {
+            case 'kettle':
+                if (typeof KettleGame !== 'undefined') {
+                    KettleGame.init(container, difficulty, this.state.character);
+                } else {
+                    console.error('KettleGame not loaded');
+                    this.resolveMinigame(gameId, 'partial');
+                }
+                break;
+            // Future minigames will be added here
+            case 'whistle':
+            case 'documentation':
+            case 'ballot':
+            case 'boss':
+                console.log('Minigame not yet implemented:', gameId);
+                this.resolveMinigame(gameId, 'partial');
+                break;
+            default:
+                console.error('Unknown minigame:', gameId);
+                this.resolveMinigame(gameId, 'partial');
+        }
     },
 
     resolveMinigame(gameId, result) {
