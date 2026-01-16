@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlawful Assembly</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="phase-amber">
+    <!-- Content Warning Screen -->
+    <div id="content-warning" class="screen">
+        <div class="terminal-box">
+            <h1>UNLAWFUL ASSEMBLY</h1>
+            <div class="warning-content">
+                <p>This game contains:</p>
+                <ul>
+                    <li>Depictions of state violence and police brutality</li>
+                    <li>Family separation and deportation</li>
+                    <li>Character death</li>
+                    <li>References to real political events and figures (satirized)</li>
+                </ul>
+                <p class="italic">It is intended as political satire and commentary.</p>
+                <p class="italic">It may be distressing. That's partly the point.</p>
+            </div>
+            <div class="menu-options">
+                <button class="menu-btn" onclick="Game.startGame()">[ BEGIN ]</button>
+                <button class="menu-btn" onclick="Game.showSettings()">[ CONTENT SETTINGS ]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Settings Screen -->
+    <div id="settings-screen" class="screen hidden">
+        <div class="terminal-box">
+            <h2>CONTENT SETTINGS</h2>
+            <div class="settings-list">
+                <label class="setting-item">
+                    <input type="checkbox" id="skip-minigames">
+                    <span>Skip mini-games (auto-resolve with average outcome)</span>
+                </label>
+                <label class="setting-item">
+                    <input type="checkbox" id="reduce-violence">
+                    <span>Reduce violence descriptions</span>
+                </label>
+                <label class="setting-item">
+                    <input type="checkbox" id="hide-deaths">
+                    <span>Hide death scenes (summarize instead)</span>
+                </label>
+            </div>
+            <div class="menu-options">
+                <button class="menu-btn" onclick="Game.saveSettings()">[ SAVE & RETURN ]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Selection Screen -->
+    <div id="character-select" class="screen hidden">
+        <div class="terminal-box wide">
+            <h2>CHOOSE YOUR PATH</h2>
+            <p class="subtitle">Each life carries different weight in this America.</p>
+            <div class="character-grid">
+                <div class="character-card" onclick="Game.selectCharacter('engineer')">
+                    <h3>THE ENGINEER</h3>
+                    <p class="difficulty">[EASY]</p>
+                    <p class="desc">White, middle-class, tech employed</p>
+                    <p class="advantage">+ Privilege Shield: First arrest = warning</p>
+                    <p class="disadvantage">- Can lose job if identified</p>
+                </div>
+                <div class="character-card" onclick="Game.selectCharacter('teacher')">
+                    <h3>THE TEACHER</h3>
+                    <p class="difficulty">[MEDIUM]</p>
+                    <p class="desc">Union member, politically aware</p>
+                    <p class="advantage">+ Starts with 3 allies</p>
+                    <p class="disadvantage">- Students at risk if arrested</p>
+                </div>
+                <div class="character-card" onclick="Game.selectCharacter('student')">
+                    <h3>THE STUDENT</h3>
+                    <p class="difficulty">[MEDIUM]</p>
+                    <p class="desc">College activist, nothing to lose</p>
+                    <p class="advantage">+ No job/family consequences</p>
+                    <p class="disadvantage">- Low resources, dismissed as radical</p>
+                </div>
+                <div class="character-card" onclick="Game.selectCharacter('veteran')">
+                    <h3>THE VETERAN</h3>
+                    <p class="difficulty">[MEDIUM-HARD]</p>
+                    <p class="desc">Served overseas, sees parallels</p>
+                    <p class="advantage">+ Tactical training, escape easier</p>
+                    <p class="disadvantage">- PTSD triggers from tear gas</p>
+                </div>
+                <div class="character-card" onclick="Game.selectCharacter('immigrant')">
+                    <h3>THE IMMIGRANT</h3>
+                    <p class="difficulty">[HARD]</p>
+                    <p class="desc">Latino, documented but targeted</p>
+                    <p class="advantage">+ Community intel on raids</p>
+                    <p class="disadvantage">- Arrest = deportation hearing</p>
+                </div>
+                <div class="character-card" onclick="Game.selectCharacter('pastor')">
+                    <h3>THE PASTOR</h3>
+                    <p class="difficulty">[HARD]</p>
+                    <p class="desc">Black church leader, civil rights legacy</p>
+                    <p class="advantage">+ Church is sanctuary</p>
+                    <p class="disadvantage">- Congregation at risk</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Screen (Travel/Scene) -->
+    <div id="game-screen" class="screen hidden">
+        <div class="terminal-box game-container">
+            <!-- Header -->
+            <div class="game-header">
+                <div class="title-bar">
+                    <span class="game-title">U N L A W F U L   A S S E M B L Y</span>
+                </div>
+                <div class="day-location">
+                    <span id="current-day">Day 1</span> - <span id="current-location">Your Apartment</span>
+                </div>
+            </div>
+
+            <!-- Scene Display Area -->
+            <div id="scene-display" class="scene-area">
+                <div id="scene-art" class="ascii-art"></div>
+                <div id="scene-text" class="scene-text"></div>
+            </div>
+
+            <!-- Alert Area -->
+            <div id="alert-area" class="alert-area hidden">
+                <span class="alert-icon">!</span>
+                <span id="alert-text"></span>
+            </div>
+
+            <!-- Stats Display -->
+            <div class="stats-panel">
+                <div class="stat-row">
+                    <div class="stat">
+                        <span class="stat-label">DEMOCRACY</span>
+                        <div class="stat-bar"><div id="democracy-bar" class="stat-fill democracy"></div></div>
+                        <span id="democracy-val" class="stat-value">65</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">FASCISM</span>
+                        <div class="stat-bar"><div id="fascism-bar" class="stat-fill fascism"></div></div>
+                        <span id="fascism-val" class="stat-value">35</span>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat">
+                        <span class="stat-label">LEGITIMACY</span>
+                        <div class="stat-bar"><div id="legitimacy-bar" class="stat-fill legitimacy"></div></div>
+                        <span id="legitimacy-val" class="stat-value">50</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">PRESS</span>
+                        <div class="stat-bar"><div id="press-bar" class="stat-fill press"></div></div>
+                        <span id="press-val" class="stat-value">40</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplies Display -->
+            <div class="supplies-panel">
+                <span class="supplies-label">SUPPLIES:</span>
+                <span class="supply-item">Water[<span id="water-bar">████</span>]</span>
+                <span class="supply-item">Medkits[<span id="medkit-bar">██░░</span>]</span>
+                <span class="supply-item">Bail Fund[$<span id="bail-amount">2,000</span>]</span>
+            </div>
+
+            <!-- Choices Area -->
+            <div id="choices-area" class="choices-panel">
+                <!-- Choices populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-game Container -->
+    <div id="minigame-screen" class="screen hidden">
+        <div id="minigame-container" class="terminal-box">
+            <!-- Mini-games load here -->
+        </div>
+    </div>
+
+    <!-- Ending Screen -->
+    <div id="ending-screen" class="screen hidden">
+        <div class="terminal-box">
+            <h2 id="ending-title"></h2>
+            <div id="ending-text" class="ending-content"></div>
+            <div class="menu-options">
+                <button class="menu-btn" onclick="Game.restart()">[ PLAY AGAIN ]</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scenes.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
