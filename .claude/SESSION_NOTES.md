@@ -79,10 +79,51 @@
 - [x] Keyboard controls (1-9 for choices)
 - [x] Responsive CSS for mobile
 
-### Git Commit:
+### Git Commits:
 ```
 b0e7f4e feat: implement Phase 1 core game loop
+749ad31 chore: ignore local claude settings
+76d4c2c feat: implement Kettle escape mini-game
 ```
+
+---
+
+## Session 1 (continued) - Kettle Mini-Game
+
+### Kettle Mini-Game Implemented:
+- **File:** `minigames/kettle.js` (~500 lines)
+- **Gameplay:** Timed escape maze where police close in from all sides
+- **Mechanics:**
+  - Grid-based movement (arrow keys)
+  - Police perimeter closes in over time
+  - Followers you must rally (SPACE) and escort to exit
+  - Timer countdown (varies by difficulty)
+  - Three outcomes: success, partial escape, kettled (failure)
+
+### Difficulty Scaling:
+| Class | Difficulty | Time | Notes |
+|-------|-----------|------|-------|
+| Engineer | Easy | 60s | More exits, slower police |
+| Veteran | Easy | 60s | Tactical training bonus |
+| Teacher/Student | Normal | 45s | Standard |
+| Pastor | Normal | 45s | Standard |
+| Immigrant | Hard | 25s | Police target player directly |
+
+### New Story Scenes Added:
+- `scene7_frontline` - March reaches police line
+- `scene8_kettle` - Triggers the Kettle mini-game
+- `scene8_hold` - Alternative: stand ground and face tear gas
+- `scene9_after_kettle` - Escape aftermath
+- `scene9_arrest` - Arrest path
+- `scene10_aftermath` - Community response next day
+- `scene10_home` - Go home to process
+- `scene10_jail` - Jail holding cell
+- `scene11_release` - Released on bail
+
+### Integration:
+- `game.js` updated with minigame triggering logic
+- CSS styles for kettle game grid and UI
+- Scene `minigame: 'kettle'` property triggers game
 
 ---
 
@@ -96,7 +137,7 @@ b0e7f4e feat: implement Phase 1 core game loop
 5. Add more random events for each phase
 
 ### Phase 3: Mini-Games
-1. The Kettle (maze escape) - `minigames/kettle.js`
+1. ~~The Kettle (maze escape) - `minigames/kettle.js`~~ DONE
 2. Whistle Network (Simon says) - `minigames/whistle.js`
 3. Documentation (photography) - `minigames/document.js`
 4. Ballot Guardian (tower defense) - `minigames/ballot.js`
