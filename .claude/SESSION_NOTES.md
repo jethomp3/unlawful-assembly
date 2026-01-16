@@ -168,6 +168,43 @@ f094074 feat: implement Documentation photography mini-game
 
 ---
 
+## Session 1 (continued) - Whistle Network Mini-Game
+
+### Whistle Network Mini-Game Implemented:
+- **File:** `minigames/whistle.js` (~500 lines)
+- **Gameplay:** Simon Says pattern memory game for warning immigrant communities
+
+### Key Mechanics:
+- **Pattern playback:** System plays short (♪) and long (♪───) whistles
+- **Player input detection:**
+  - TAP SPACE (<300ms): Short whistle
+  - HOLD SPACE (>300ms): Long whistle
+- **Pattern extends** with each successful house warning
+- **Neighborhood visualization:** Houses show states (safe/warning/saved/raided)
+- **ICE raid timer:** Creates urgency as van approaches
+
+### Difficulty Scaling:
+| Class | Houses | Time | Pattern Speed | Hold Threshold |
+|-------|--------|------|---------------|----------------|
+| Easy | 6 | 180s | 600ms | 300ms |
+| Normal | 8 | 150s | 500ms | 250ms |
+| Hard | 10 | 120s | 400ms | 200ms |
+| Immigrant | 8 | 100s | 400ms | 200ms |
+
+Note: Immigrant class gets "easy" difficulty due to community intel advantage
+
+### New Story Scenes Added:
+- `scene14_community_warning` - Community network gathering
+- `scene15_whistle_start` - Triggers the Whistle mini-game
+- `scene16_after_whistle` - Aftermath and branching choices
+
+### Git Commit:
+```
+542646e feat: implement Whistle Network mini-game
+```
+
+---
+
 ## Next Session Should:
 
 ### Phase 2: Story Content
@@ -179,7 +216,7 @@ f094074 feat: implement Documentation photography mini-game
 
 ### Phase 3: Mini-Games
 1. ~~The Kettle (maze escape) - `minigames/kettle.js`~~ DONE
-2. Whistle Network (Simon says) - `minigames/whistle.js`
+2. ~~Whistle Network (Simon says) - `minigames/whistle.js`~~ DONE
 3. ~~Documentation (photography) - `minigames/document.js`~~ DONE
 4. Ballot Guardian (tower defense) - `minigames/ballot.js`
 5. The Orange Menace (boss fight) - `minigames/boss.js`
