@@ -127,6 +127,47 @@ b0e7f4e feat: implement Phase 1 core game loop
 
 ---
 
+## Session 1 (continued) - Documentation Mini-Game
+
+### Documentation Mini-Game Implemented:
+- **File:** `minigames/document.js` (~650 lines)
+- **Gameplay:** Photography game - capture evidence of police brutality
+
+### Key Mechanics:
+- **Moving targets:** 3 officers with different patrol patterns:
+  - Horizontal, vertical, circular, random movement
+- **Camera controls:**
+  - Arrow keys: Pan viewport
+  - Z/X: Zoom in/out
+  - SPACE: Take photo
+- **Zoom requirements for each shot type:**
+  - Badge: 2.5-3x zoom (high detail)
+  - Face: 1.75-2.5x zoom (medium)
+  - Action: 1-1.75x zoom (wide, needs victim in frame too)
+- **Occlusion:** Officers can block each other
+- **Danger meter:** Fills faster when zoomed in
+
+### Difficulty Scaling:
+| Class | Time | Officer Speed | Danger Rate |
+|-------|------|---------------|-------------|
+| Engineer | 90s | Slow | Low |
+| Normal | 60s | Medium | Medium |
+| Hard | 45s | Fast | High |
+| Immigrant | 40s | Very Fast | Very High |
+
+### New Story Scenes:
+- `scene12_brutality` - Triggers documentation minigame
+- `scene13_after_doc` - Aftermath choices
+- `scene13_show_footage` - Share evidence with legal observer
+- `scene13_shock` - Too traumatized to speak
+
+### Git Commit:
+```
+f094074 feat: implement Documentation photography mini-game
+```
+
+---
+
 ## Next Session Should:
 
 ### Phase 2: Story Content
@@ -139,7 +180,7 @@ b0e7f4e feat: implement Phase 1 core game loop
 ### Phase 3: Mini-Games
 1. ~~The Kettle (maze escape) - `minigames/kettle.js`~~ DONE
 2. Whistle Network (Simon says) - `minigames/whistle.js`
-3. Documentation (photography) - `minigames/document.js`
+3. ~~Documentation (photography) - `minigames/document.js`~~ DONE
 4. Ballot Guardian (tower defense) - `minigames/ballot.js`
 5. The Orange Menace (boss fight) - `minigames/boss.js`
 
