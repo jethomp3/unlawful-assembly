@@ -243,6 +243,7 @@ export function advanceDay(state: GameState, rng: Rng, opts: SimOptions): DayRes
     state.routeIndex += 1;
     addJournal(state, `Reached ${landmark.name}.`, 'milestone');
     if (landmark.arrivalEffect) applyDelta(state, landmark.arrivalEffect);
+    if (landmark.checkpointId) state.pendingCheckpoint = landmark.checkpointId;
     items.push({ type: 'landmark', landmark });
     if (landmark.id === opts.finalLandmarkId) {
       state.over = { kind: 'arrived', day: state.day };

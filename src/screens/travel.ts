@@ -114,6 +114,16 @@ export function travelScreen(manager: ScreenManager, state: GameState): Screen {
 
   const self: Screen = {
     mount(root) {
+      // A blockade reached before a reload is still standing there.
+      if (state.pendingCheckpoint && !state.over) {
+        const id = state.pendingCheckpoint;
+        setTimeout(() => {
+          if (manager.top === self && state.pendingCheckpoint === id) {
+            manager.push(checkpointScreen(manager, state, rng, id, () => manager.pop()));
+          }
+        }, 0);
+      }
+
       const body = el('div', 'screen-body');
 
       body.append(march.element);

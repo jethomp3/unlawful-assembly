@@ -67,6 +67,9 @@ export interface GameState {
 
   journal: JournalEntry[];
 
+  /** A blockade reached but not yet resolved — survives save/reload. */
+  pendingCheckpoint?: string;
+
   over?: { kind: GameOverKind; day: number };
 }
 

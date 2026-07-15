@@ -255,6 +255,11 @@ function playScreen(
 
       pc.fit(root.clientWidth - 40);
       input.attach(pc.canvas);
+
+      if (import.meta.env.DEV) {
+        // Debug/driver hook: aim assist for automated smoke tests.
+        (window as unknown as { __doc: unknown }).__doc = { cam, scene };
+      }
     },
     unmount() {
       input.detach();

@@ -23,6 +23,7 @@ export function checkpointScreen(
   const classDef = classById(state.classId);
 
   const finish = (text: string, tone?: 'dim' | 'amber' | 'red'): void => {
+    state.pendingCheckpoint = undefined; // resolved; no re-rolling via reload
     state.rngState = rng.getState();
     saveGame(state);
     manager.swapTop(messageScreen(text, tone, onDone));
