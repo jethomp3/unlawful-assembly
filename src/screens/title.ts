@@ -3,6 +3,7 @@ import type { ScreenManager } from '../ui/screenManager';
 import { el, menu, rule } from '../ui/dom';
 import { hasSave, loadGame, loadHighScores, loadTombstones } from '../engine/save';
 import { classSelectScreen } from './classSelect';
+import { setEndingTint } from './gameOver';
 import { travelScreen } from './travel';
 
 const TITLE_ART = `
@@ -18,6 +19,7 @@ const TITLE_ART = `
 export function titleScreen(manager: ScreenManager): Screen {
   return {
     mount(root) {
+      setEndingTint(null); // back to green; the road starts over
       const body = el('div', 'screen-body');
       body.append(el('pre', 'title-art', TITLE_ART));
 

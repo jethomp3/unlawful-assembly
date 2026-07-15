@@ -83,6 +83,64 @@ body.no-crt .screen {
   text-shadow: none;
 }
 
+/* ---------- ending palette breaks ----------
+   The monitor is green for 400 miles. The ending is where the world
+   gets color — or loses the little it had. */
+
+body[class*='ending-'] .screen {
+  transition: background 2.5s ease, color 2.5s ease, border-color 2.5s ease;
+  text-shadow: 0 0 4px currentColor;
+}
+
+/* DEFIANT: full color at last. Warm light, and other hues at the edges. */
+body.ending-defiant .screen {
+  --green: #f2ead8;
+  --green-dim: #c9b98c;
+  --green-faint: #4a4033;
+  --screen-bg: #131020;
+  background:
+    radial-gradient(circle at 18% 15%, rgba(90, 70, 190, 0.22), transparent 42%),
+    radial-gradient(circle at 82% 25%, rgba(210, 70, 70, 0.16), transparent 42%),
+    radial-gradient(circle at 50% 95%, rgba(230, 185, 70, 0.2), transparent 48%),
+    var(--screen-bg);
+  border-color: #6b5a8f;
+  color: var(--green);
+}
+
+/* PYRRHIC: the color of ash and overcast. Not green. Not much of anything. */
+body.ending-pyrrhic .screen {
+  --green: #d9d9cc;
+  --green-dim: #8f8f85;
+  --green-faint: #3a3a38;
+  --screen-bg: #121214;
+  background: var(--screen-bg);
+  border-color: var(--green-faint);
+  color: var(--green);
+}
+
+/* THE FALL: red phosphor. The terminal still works. It reports to someone else. */
+body.ending-fall .screen {
+  --green: #ff5040;
+  --green-dim: #a03830;
+  --green-faint: #421310;
+  --screen-bg: #170403;
+  background: var(--screen-bg);
+  border-color: var(--green-faint);
+  color: var(--green);
+}
+
+/* THE ECHO / COMPLICIT: amber monochrome — the color of watching it on a screen. */
+body.ending-echo .screen,
+body.ending-complicit .screen {
+  --green: #ffb000;
+  --green-dim: #966800;
+  --green-faint: #4d3600;
+  --screen-bg: #1a1400;
+  background: var(--screen-bg);
+  border-color: var(--green-faint);
+  color: var(--green);
+}
+
 .screen-body {
   flex: 1 1 auto;
   display: flex;

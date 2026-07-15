@@ -16,7 +16,23 @@ const REASON_TEXT: Record<GoneReason, string> = {
   left: 'went home',
 };
 
-function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | 'amber' } {
+/** Ending palette break: the body class that recolors the monitor. */
+type EndingTint = 'defiant' | 'pyrrhic' | 'fall' | 'echo' | 'complicit';
+
+interface Ending {
+  text: string;
+  tone?: 'red' | 'amber';
+  tint?: EndingTint;
+}
+
+export function setEndingTint(tint: EndingTint | null): void {
+  for (const cls of [...document.body.classList]) {
+    if (cls.startsWith('ending-')) document.body.classList.remove(cls);
+  }
+  if (tint) document.body.classList.add(`ending-${tint}`);
+}
+
+function demonstrationEnding(state: GameState): Ending {
   const survivors = state.party.filter(
     (m) => m.status !== 'gone' && m.status !== 'detained',
   ).length;
@@ -31,6 +47,7 @@ function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | '
   if (late) {
     return {
       tone: 'amber',
+      tint: 'echo',
       text:
         'THE ECHO\n\n' +
         'You arrive on a Tuesday. The demonstration was Saturday.\n\n' +
@@ -49,6 +66,7 @@ function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | '
   if (state.crackdown >= 75) {
     return {
       tone: 'red',
+      tint: 'fall',
       text:
         'THE FALL\n\n' +
         'The demonstration is technically permitted: one hour, one plaza, ' +
@@ -69,6 +87,7 @@ function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | '
 
   if (state.support >= 55 && state.crackdown < 60) {
     return {
+      tint: 'defiant',
       text:
         'DEFIANT\n\n' +
         'You come over the last rise and the sound arrives before the ' +
@@ -89,6 +108,7 @@ function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | '
 
   return {
     tone: 'amber',
+    tint: 'pyrrhic',
     text:
       'PYRRHIC\n\n' +
       'The demonstration happens. It is smaller than the dream and larger ' +
@@ -105,7 +125,7 @@ function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | '
   };
 }
 
-function endingText(state: GameState): { text: string; tone?: 'red' | 'amber' } {
+function endingText(state: GameState): Ending {
   switch (state.over?.kind) {
     case 'arrived':
       return demonstrationEnding(state);
@@ -133,6 +153,7 @@ function endingText(state: GameState): { text: string; tone?: 'red' | 'amber' } 
     case 'abandoned':
       return {
         tone: 'amber',
+        tint: 'complicit',
         text:
           'THE COMPLICIT ENDING\n\n' +
           'You are home in time for dinner.\n\n' +
@@ -156,10 +177,12 @@ function endingText(state: GameState): { text: string; tone?: 'red' | 'amber' } 
 export function gameOverScreen(manager: ScreenManager, state: GameState): Screen {
   clearSave();
   const lost = state.party.filter((m) => m.status === 'gone' || m.status === 'detained');
-  const { text, tone } = endingText(state);
+  const { text, tone, tint } = endingText(state);
 
   return {
     mount(root) {
+      // The palette break: after 400 green miles, the ending has a color.
+      setEndingTint(tint ?? null);
       const body = el('div', 'screen-body');
       body.append(prose(text, `prose${tone ? ` ${tone}` : ''}`));
       body.append(
