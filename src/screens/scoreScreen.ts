@@ -5,10 +5,11 @@ import type { GameState } from '../engine/types';
 import { computeScore } from '../engine/score';
 import { addHighScore } from '../engine/save';
 import { classById } from '../data/classes';
+import { DEMONSTRATION_DAY } from '../data/route';
 import { titleScreen } from './title';
 
 const OUTCOME_LABEL: Record<string, string> = {
-  arrived: 'reached the Meridian',
+  arrived: 'reached the Capital',
   detained: 'detained indefinitely',
   wiped: 'the march broke',
   abandoned: 'went home',
@@ -16,7 +17,7 @@ const OUTCOME_LABEL: Record<string, string> = {
 
 export function scoreScreen(manager: ScreenManager, state: GameState): Screen {
   const classDef = classById(state.classId);
-  const result = computeScore(state, classDef.scoreMultiplier);
+  const result = computeScore(state, classDef.scoreMultiplier, DEMONSTRATION_DAY);
   const outcome = OUTCOME_LABEL[state.over?.kind ?? 'wiped'] ?? 'unknown';
 
   addHighScore({

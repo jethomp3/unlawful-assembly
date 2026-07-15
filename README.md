@@ -40,11 +40,16 @@ the mini-game (drag to pan, pinch to zoom). Zero runtime dependencies.
 
 ## Status
 
-**Vertical slice**: the first 250 miles (Hollis Falls → Meridian River
-Bridge), the full journey loop, the act-1 event table, the Documentation
-mini-game, one written checkpoint, all four terminal states, tombstones,
-and the score table. Acts 2–3 (the suburbs, the Beltway, the Capital, the
-endings by Support/Crackdown) are designed and stubbed in `src/data/`.
+**Full game**: all 400 miles across three acts, three written checkpoints
+(the Interstate 9 Overpass, the Meridian River Bridge, the Capital Beltway
+perimeter), ~40 events across three registers, town resupply stores whose
+prices climb with Crackdown, and four demonstration endings — Defiant,
+Pyrrhic, The Fall, and The Echo (arrive too late) — plus the Complicit
+ending for going home. Every road ends at Greenland.
+
+The march auto-continues Oregon Trail-style: press SPACE to walk, and days
+roll by (~3 seconds each) until something on the road needs you. Reading
+screens always wait; ESC or any menu number halts the column.
 
 The previous implementation lives in `legacy/`; the original design document
 is `GAME_SPEC.md` (historical).

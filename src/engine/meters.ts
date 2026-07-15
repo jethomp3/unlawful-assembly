@@ -3,7 +3,10 @@
 import type { Pace, Profile, Weather } from './types';
 
 export const TUNING = {
-  baseMilesPerDay: 14,
+  // ~9 mi/day steady (before weather/health drag): the 400-mile march runs
+  // ~37-58 days depending on pace, sized for the auto-continue rhythm
+  // (many quiet days between events) against the day-60 demonstration.
+  baseMilesPerDay: 9,
 
   paceMiles: { grueling: 1.5, steady: 1.0, cautious: 0.7 } satisfies Record<Pace, number>,
   weatherMiles: { clear: 1.0, rain: 0.8, heatwave: 0.85, cold: 0.9 } satisfies Record<
@@ -15,17 +18,17 @@ export const TUNING = {
 
   /** Daily meter drift by visibility profile: attention is a movement's food. */
   profile: {
-    loud: { support: 1.8, heat: 2.4, crackdown: 0.5 },
-    mixed: { support: 0.8, heat: 0.7, crackdown: 0.2 },
-    low: { support: 0.15, heat: -1.6, crackdown: 0.0 },
+    loud: { support: 1.0, heat: 1.6, crackdown: 0.35 },
+    mixed: { support: 0.45, heat: 0.45, crackdown: 0.18 },
+    low: { support: 0.08, heat: -1.2, crackdown: 0.0 },
   } satisfies Record<Profile, { support: number; heat: number; crackdown: number }>,
 
   /** Crackdown rises on its own. Doing nothing is not neutral. */
-  crackdownDailyFloor: 0.4,
+  crackdownDailyFloor: 0.3,
 
   /** Health/morale drift per day by pace (applies to able members). */
-  paceHealth: { grueling: -2.5, steady: -0.8, cautious: -0.2 } satisfies Record<Pace, number>,
-  paceMorale: { grueling: -2.0, steady: -0.5, cautious: 0.6 } satisfies Record<Pace, number>,
+  paceHealth: { grueling: -1.6, steady: -0.5, cautious: -0.1 } satisfies Record<Pace, number>,
+  paceMorale: { grueling: -1.4, steady: -0.3, cautious: 0.5 } satisfies Record<Pace, number>,
 
   /** Extra health drain marching hurt or hungry. */
   hurtDailyHealth: -3,
@@ -59,9 +62,13 @@ export const TUNING = {
   saturationPerSession: 1.0,
   saturationDecayPerDay: 0.34,
 
-  /** Event cadence. */
-  eventChancePerDay: 0.75,
-  secondEventChance: 0.18,
+  /** Event cadence: with auto-continue, ~4-10 quiet days between events. */
+  eventChancePerDay: 0.16,
+  secondEventChance: 0.12,
+
+  /** Auto-continue rhythm (seconds). */
+  marchAnimSeconds: 3.0,
+  marchPauseSeconds: 0.5,
 } as const;
 
 export function bailCost(crackdown: number): number {

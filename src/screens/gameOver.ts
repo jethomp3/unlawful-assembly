@@ -6,6 +6,7 @@ import type { ScreenManager } from '../ui/screenManager';
 import { el, menu, pressSpace, prose, rule } from '../ui/dom';
 import type { GameState, GoneReason, PartyMember } from '../engine/types';
 import { addTombstone, clearSave } from '../engine/save';
+import { DEMONSTRATION_DAY } from '../data/route';
 import { scoreScreen } from './scoreScreen';
 
 const REASON_TEXT: Record<GoneReason, string> = {
@@ -15,23 +16,99 @@ const REASON_TEXT: Record<GoneReason, string> = {
   left: 'went home',
 };
 
+function demonstrationEnding(state: GameState): { text: string; tone?: 'red' | 'amber' } {
+  const survivors = state.party.filter(
+    (m) => m.status !== 'gone' && m.status !== 'detained',
+  ).length;
+  const late = state.day > DEMONSTRATION_DAY;
+  const walkedWith =
+    survivors >= 4
+      ? 'Your whole group stands together at the end of it.'
+      : survivors >= 2
+        ? `${survivors} of you stand at the end of it. You carry the names of the rest.`
+        : 'You stand at the end of it alone, carrying every name.';
+
+  if (late) {
+    return {
+      tone: 'amber',
+      text:
+        'THE ECHO\n\n' +
+        'You arrive on a Tuesday. The demonstration was Saturday.\n\n' +
+        'The mall is a museum of it: flattened grass in the shape of a ' +
+        'crowd, zip ties in the gutters, one shoe, a sign face-down that ' +
+        'says the thing you walked four hundred miles to say.\n\n' +
+        `${walkedWith}\n\n` +
+        'A park ranger watches you stand there. "You should have seen ' +
+        'it," she says. Then, quieter: "You should see the next one."\n\n' +
+        'On a bar TV behind you, the news is already elsewhere: the ' +
+        'President, pointing at a map of Greenland. The absurdity never ' +
+        'stops. So you had better not either.\n\nTHE MARCH IS OVER. THE WALK ISN\'T.',
+    };
+  }
+
+  if (state.crackdown >= 75) {
+    return {
+      tone: 'red',
+      text:
+        'THE FALL\n\n' +
+        'The demonstration is technically permitted: one hour, one plaza, ' +
+        'ringed by fencing with a single gate, under floodlights, under ' +
+        'drones, under a new definition of the word "free."\n\n' +
+        `${walkedWith}\n\n` +
+        'You sing anyway. Through the wire. The guardsmen are ordered not ' +
+        'to listen, which is not an order anyone knows how to follow.\n\n' +
+        'It is not the country you left home to save. It is the one you ' +
+        'will keep working in, underground where it has to be, in ' +
+        'basements and group chats and church halls, until the wire comes ' +
+        'down.\n\n' +
+        'The last thing you see leaving the plaza is a state broadcast: ' +
+        'the President unveiling REAL AMERICA (PENDING) across a map of ' +
+        'Greenland. Nobody in the crowd is allowed to laugh.\n\nSomebody laughs.',
+    };
+  }
+
+  if (state.support >= 55 && state.crackdown < 60) {
+    return {
+      text:
+        'DEFIANT\n\n' +
+        'You come over the last rise and the sound arrives before the ' +
+        'sight of it: a sea of people, banked against the dome like ' +
+        'weather. Hundreds of thousands. The marshals wear vests marked ' +
+        'WELCOME WALKERS, and when your column is announced — four ' +
+        'hundred miles — the roar rolls back over you like the river.\n\n' +
+        `${walkedWith}\n\n` +
+        'Nothing is fixed. Everything is possible. Those turn out to be ' +
+        'the same weather, felt from different porches.\n\n' +
+        'On the jumbotron, between speakers, the news crawl slides past: ' +
+        'GREENLAND DENIES BEING FOR SALE; WHITE HOUSE CALLS DENIAL ' +
+        '"FLIRTING." A quarter million people boo, then laugh, then go ' +
+        'back to the business of the republic.\n\n' +
+        'The absurdity never stops. Neither, it turns out, do you.',
+    };
+  }
+
+  return {
+    tone: 'amber',
+    text:
+      'PYRRHIC\n\n' +
+      'The demonstration happens. It is smaller than the dream and larger ' +
+      'than the fear: a plaza half-full of the stubborn, ringed by a ' +
+      'perimeter that decided, this time, mostly to watch.\n\n' +
+      `${walkedWith}\n\n` +
+      'A speaker says the country is at a crossroads. The crowd knows ' +
+      'better. It is at a fork it will keep arriving at, every year, ' +
+      'maybe forever. You did not win. You did not lose. You walked, and ' +
+      'the walking was witnessed, and witness is the seed of everything.\n\n' +
+      'On the ride out of the city, every screen at the depot plays the ' +
+      'same clip: Greenland, relabeled, PENDING. The man beside you ' +
+      'sighs: "It never stops." He shoulders his pack.\n\n"So we don\'t," you say.',
+  };
+}
+
 function endingText(state: GameState): { text: string; tone?: 'red' | 'amber' } {
   switch (state.over?.kind) {
     case 'arrived':
-      return {
-        text:
-          'MERIDIAN RIVER BRIDGE\n\n' +
-          'You cross at dawn, before the shift change, and stop in the ' +
-          'middle because everyone stops in the middle.\n\n' +
-          'Behind you: two hundred and fifty miles of county roads, church ' +
-          'basements, checkpoint lines, and the names of the people who ' +
-          'are not standing here.\n\n' +
-          'Ahead: the Capital. One hundred and fifty miles. The ' +
-          'demonstration. Whatever comes after.\n\n' +
-          'The river is wide and brown and patient, and it has seen ' +
-          'marches before. Some of them worked.\n\n' +
-          '— END OF THE VERTICAL SLICE —\n(Acts 2 and 3 continue to the Capital.)',
-      };
+      return demonstrationEnding(state);
     case 'detained':
       return {
         tone: 'red',

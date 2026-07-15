@@ -11,6 +11,7 @@ import { addJournal } from '../engine/state';
 import { saveGame } from '../engine/save';
 import { memberLine } from '../data/dialogue';
 import { ROUTE, TOTAL_MILES } from '../data/route';
+import { STORE_ITEMS } from '../data/storeItems';
 import { gameOverScreen } from './gameOver';
 
 export function messageScreen(
@@ -300,6 +301,71 @@ export function mapScreen(manager: ScreenManager, state: GameState): Screen {
       const youAt = `      you are at mile ${Math.floor(state.miles)} of ${TOTAL_MILES}`;
       body.append(prose(lines.join('\n') + '\n\n' + youAt));
       body.append(menu([{ key: '1', label: 'Back', onSelect: () => manager.pop() }]));
+      body.append(statusBar(state));
+      root.append(body);
+    },
+  };
+}
+
+/**
+ * Town resupply: the outfitting store on the road. Prices climb with
+ * Crackdown — scarcity is policy now.
+ */
+export function resupplyScreen(
+  state: GameState,
+  townName: string,
+  onDone: () => void,
+): Screen {
+  const markup = 1 + state.crackdown / 100;
+
+  return {
+    mount(root) {
+      const body = el('div', 'screen-body');
+      body.append(el('h2', undefined, `${townName} — General Store`));
+      body.append(
+        el(
+          'div',
+          'dim',
+          state.crackdown > 50
+            ? '"Prices went up," the clerk says, nodding at the television. "Everything did."'
+            : 'The clerk stacks your goods without commentary, which is its own kindness.',
+        ),
+      );
+      body.append(rule());
+
+      const moneyLine = el('div', 'amber');
+      const list = el('div');
+
+      const redraw = (): void => {
+        moneyLine.textContent = `You have $${state.money}.`;
+        list.replaceChildren();
+        for (const it of STORE_ITEMS) {
+          if (it.id === 'bailFund') continue; // deposits happen at home
+          const price = Math.round(it.price * markup);
+          const row = el('div', 'spread');
+          row.append(
+            el('span', undefined, `${it.label} — $${price} per ${it.step} ${it.unit}`),
+          );
+          const buy = el('button', 'qty-btn', 'buy');
+          buy.disabled = state.money < price;
+          buy.setAttribute('aria-label', `Buy ${it.label}`);
+          buy.addEventListener('click', () => {
+            if (state.money < price) return;
+            state.money -= price;
+            if (it.id === 'supplies') state.supplies += it.step;
+            else if (it.id === 'medkits') state.medkits += it.step;
+            else if (it.id === 'batteries') state.batteries += it.step;
+            saveGame(state);
+            redraw();
+          });
+          row.append(buy);
+          list.append(row);
+        }
+      };
+      redraw();
+
+      body.append(moneyLine, list, rule());
+      body.append(menu([{ key: '1', label: 'Back to the road', onSelect: onDone }]));
       body.append(statusBar(state));
       root.append(body);
     },

@@ -38,6 +38,8 @@ export interface LandmarkDef {
   /** Applied on arrival (crowd donations, resupply, morale). */
   arrivalEffect?: StateDelta;
   checkpointId?: string;
+  /** Town with a resupply store (prices rise with Crackdown). */
+  store?: boolean;
 }
 
 /** Direct change to one party member, applied by the event engine. */

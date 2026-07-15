@@ -7,7 +7,7 @@ import { advanceDay, type SimOptions } from '../sim';
 import { applyEvent } from '../events';
 import { classById } from '../../data/classes';
 import { ALL_EVENTS } from '../../data/events';
-import { ROUTE, SLICE_END_ID } from '../../data/route';
+import { ROUTE, FINAL_LANDMARK_ID } from '../../data/route';
 import type { GameState } from '../types';
 
 // localStorage stub for node
@@ -120,7 +120,7 @@ describe('30-day scripted run', () => {
       events: ALL_EVENTS,
       route: ROUTE,
       classDef: def,
-      finalLandmarkId: SLICE_END_ID,
+      finalLandmarkId: FINAL_LANDMARK_ID,
       mode: 'march',
     };
     for (let i = 0; i < 30 && !state.over; i++) {
@@ -154,6 +154,30 @@ describe('30-day scripted run', () => {
     }
   });
 
+  it('a steady march with no interruptions reaches the Capital near the deadline', () => {
+    const def = classById('teacher');
+    const state = createInitialState('teacher', ['A', 'B', 'C', 'D', 'E'], def.kit, 77);
+    state.supplies = 9999; // isolate travel math from starvation
+    const rng = createRng(77);
+    const opts: SimOptions = {
+      events: [],
+      route: ROUTE,
+      classDef: def,
+      finalLandmarkId: FINAL_LANDMARK_ID,
+      mode: 'march',
+    };
+    let days = 0;
+    while (!state.over && days < 120) {
+      advanceDay(state, rng, opts);
+      days++;
+    }
+    expect(state.over?.kind).toBe('arrived');
+    // Steady pace should land in the day-45..70 window: tight against the
+    // day-60 demonstration, so detours and rests genuinely cost something.
+    expect(state.day).toBeGreaterThan(45);
+    expect(state.day).toBeLessThan(70);
+  });
+
   it('crackdown ratchets upward even at low profile (balance guard)', () => {
     const def = classById('teacher');
     const state = createInitialState('teacher', ['A', 'B', 'C', 'D', 'E'], def.kit, 5);
@@ -164,7 +188,7 @@ describe('30-day scripted run', () => {
       events: [], // no events: isolate the floor
       route: ROUTE,
       classDef: def,
-      finalLandmarkId: SLICE_END_ID,
+      finalLandmarkId: FINAL_LANDMARK_ID,
       mode: 'march',
     };
     for (let i = 0; i < 20; i++) advanceDay(state, rng, opts);

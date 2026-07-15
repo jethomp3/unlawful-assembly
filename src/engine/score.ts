@@ -13,7 +13,11 @@ export interface ScoreResult {
 }
 
 /** The Oregon Trail points table, reskinned. */
-export function computeScore(state: GameState, multiplier: number): ScoreResult {
+export function computeScore(
+  state: GameState,
+  multiplier: number,
+  deadlineDay?: number,
+): ScoreResult {
   const survivors = state.party.filter(
     (m) => m.status !== 'gone' && m.status !== 'detained',
   );
@@ -32,6 +36,12 @@ export function computeScore(state: GameState, multiplier: number): ScoreResult 
     { label: `Bail fund intact ($${state.bailFund})`, points: Math.round(state.bailFund / 10) },
     { label: `Footage banked (${Math.round(state.footage)})`, points: Math.round(state.footage) },
   ];
+  if (state.over?.kind === 'arrived') {
+    lines.push({ label: 'Reached the Capital', points: 400 });
+    if (deadlineDay !== undefined && state.day <= deadlineDay) {
+      lines.push({ label: 'In time for the demonstration', points: 300 });
+    }
+  }
   const subtotal = lines.reduce((s, l) => s + l.points, 0);
   return {
     lines,

@@ -11,7 +11,7 @@ const GROUND_Y = 84;
 
 export interface MarchStrip {
   element: HTMLElement;
-  tick(dt: number, state: GameState): void;
+  tick(dt: number, state: GameState, moving: boolean): void;
 }
 
 export function createMarchStrip(): MarchStrip {
@@ -33,11 +33,11 @@ export function createMarchStrip(): MarchStrip {
     y: (i * 31) % H,
   }));
 
-  function tick(dt: number, state: GameState): void {
-    const marching = !state.over;
+  function tick(dt: number, state: GameState, moving: boolean): void {
+    const marching = moving && !state.over;
     const speed = marching ? 26 : 0;
     scroll += speed * dt;
-    walkPhase += dt * 6;
+    if (marching) walkPhase += dt * 6;
 
     const { ctx } = pc;
     ctx.fillStyle = PALETTE.k!;
