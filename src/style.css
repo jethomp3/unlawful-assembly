@@ -1,0 +1,379 @@
+/* UNLAWFUL ASSEMBLY — Apple II green phosphor look.
+   All text is DOM; canvas is only the march strip + minigame. */
+
+:root {
+  --green: #33ff33;
+  --green-dim: #1d9e1d;
+  --green-faint: #0e4d0e;
+  --amber: #ffb000;
+  --red: #ff4433;
+  --white: #e8ffe8;
+  --bg: #010401;
+  --screen-bg: #041104;
+  --font: "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The monitor. Fixed 4:3-ish logical screen, letterboxed. */
+.screen {
+  position: relative;
+  width: min(100vw, calc(100vh * 1.5), 960px);
+  aspect-ratio: 3 / 2;
+  max-height: 100vh;
+  background: var(--screen-bg);
+  border: 2px solid var(--green-faint);
+  border-radius: 6px;
+  padding: 1.2em 1.6em;
+  font-size: clamp(11px, 1.9vmin, 19px);
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-shadow: 0 0 4px rgba(51, 255, 51, 0.45);
+}
+
+/* Scanlines + vignette. Pure flavor; pointer-events off. */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.18) 3px
+    ),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+body.no-crt .screen::after {
+  display: none;
+}
+body.no-crt .screen {
+  text-shadow: none;
+}
+
+.screen-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--green-faint) transparent;
+}
+
+/* ---------- text ---------- */
+
+h1,
+h2 {
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.title-art {
+  white-space: pre;
+  line-height: 1.1;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+.centered {
+  text-align: center;
+}
+
+.dim {
+  color: var(--green-dim);
+}
+.amber {
+  color: var(--amber);
+  text-shadow: 0 0 4px rgba(255, 176, 0, 0.45);
+}
+.red {
+  color: var(--red);
+  text-shadow: 0 0 4px rgba(255, 68, 51, 0.45);
+}
+.white {
+  color: var(--white);
+}
+
+.rule {
+  border: none;
+  border-top: 1px solid var(--green-faint);
+  margin: 0.6em 0;
+}
+
+.prose {
+  white-space: pre-wrap;
+}
+
+/* ---------- menus ---------- */
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  margin: 0.6em 0;
+}
+
+.menu button,
+button.menu-item {
+  font: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--green);
+  cursor: pointer;
+  padding: 0.15em 0.4em;
+  text-shadow: inherit;
+}
+
+.menu button:hover:not(:disabled),
+.menu button:focus-visible:not(:disabled) {
+  background: var(--green);
+  color: var(--screen-bg);
+  outline: none;
+  text-shadow: none;
+}
+
+.menu button:disabled {
+  color: var(--green-faint);
+  cursor: default;
+}
+
+.menu button .key {
+  display: inline-block;
+  min-width: 1.6em;
+}
+
+/* Press SPACE BAR to continue */
+.press-space {
+  margin-top: auto;
+  padding-top: 0.6em;
+  text-align: center;
+  animation: blink 1.2s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-space {
+    animation: none;
+  }
+}
+
+/* ---------- status bar ---------- */
+
+.status-bar {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--green-faint);
+  margin-top: 0.5em;
+  padding-top: 0.4em;
+  font-size: 0.9em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em 1.4em;
+  color: var(--green-dim);
+}
+
+.status-bar b {
+  color: var(--green);
+  font-weight: normal;
+}
+
+/* ---------- canvases ---------- */
+
+canvas.pixel {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  margin: 0 auto;
+}
+
+.march-frame {
+  border: 1px solid var(--green-faint);
+  margin-bottom: 0.5em;
+  line-height: 0;
+  align-self: center;
+  max-width: 100%;
+}
+
+/* ---------- forms (naming, store) ---------- */
+
+input[type="text"] {
+  font: inherit;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--green-dim);
+  color: var(--white);
+  padding: 0.1em 0.2em;
+  width: 14ch;
+  text-shadow: inherit;
+}
+input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: var(--green);
+}
+
+table.store {
+  border-collapse: collapse;
+  margin: 0.5em 0;
+  width: 100%;
+}
+table.store td,
+table.store th {
+  text-align: left;
+  padding: 0.12em 0.6em 0.12em 0;
+}
+table.store td.num {
+  text-align: right;
+  min-width: 6ch;
+}
+
+.qty-btn {
+  font: inherit;
+  background: none;
+  border: 1px solid var(--green-dim);
+  color: var(--green);
+  cursor: pointer;
+  min-width: 1.8em;
+  min-height: 1.5em;
+  text-shadow: inherit;
+}
+.qty-btn:hover,
+.qty-btn:focus-visible {
+  background: var(--green);
+  color: var(--screen-bg);
+  outline: none;
+  text-shadow: none;
+}
+
+/* ---------- news ticker ---------- */
+
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px dashed var(--green-faint);
+  border-bottom: 1px dashed var(--green-faint);
+  padding: 0.1em 0;
+  color: var(--amber);
+  font-size: 0.85em;
+}
+
+.ticker span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: crawl 22s linear infinite;
+}
+
+@keyframes crawl {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker span {
+    animation: none;
+    padding-left: 0;
+    white-space: normal;
+  }
+}
+
+/* ---------- minigame overlay buttons ---------- */
+
+.doc-stage {
+  position: relative;
+  align-self: center;
+  line-height: 0;
+  touch-action: none;
+}
+
+.doc-overlay-btn {
+  position: absolute;
+  font: inherit;
+  font-size: 0.85em;
+  background: rgba(4, 17, 4, 0.75);
+  border: 1px solid var(--green-dim);
+  color: var(--green);
+  padding: 0.4em 0.8em;
+  cursor: pointer;
+  z-index: 2;
+}
+.doc-overlay-btn:hover,
+.doc-overlay-btn:focus-visible {
+  background: var(--green);
+  color: var(--screen-bg);
+  outline: none;
+}
+
+.doc-snap {
+  right: 0.5em;
+  bottom: 0.5em;
+}
+.doc-leave {
+  right: 0.5em;
+  top: 0.5em;
+}
+.doc-zoom-in {
+  left: 3.2em;
+  bottom: 0.5em;
+}
+.doc-zoom-out {
+  left: 0.5em;
+  bottom: 0.5em;
+}
+
+/* ---------- utility ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.spread {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  flex-wrap: wrap;
+}
